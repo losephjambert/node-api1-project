@@ -27,6 +27,20 @@ server.get('/api/users', (request, response) => {
     });
 });
 
+// get user by :id
+server.get('/api/users/:id', (request, response) => {
+  const { id } = request.params;
+  console.log(id);
+  db.findById(id)
+    .then(user => {
+      response.send(user);
+      console.log(user);
+    })
+    .catch(error => {
+      response.status(500).send('Users could not be found');
+    });
+});
+
 // create user
 server.post('/api/users', (request, response) => {
   const { name, bio } = request.body;
