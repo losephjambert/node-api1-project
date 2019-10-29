@@ -20,10 +20,27 @@ server.get('/', (request, response) => {
 server.get('/api/users', (request, response) => {
   db.find()
     .then(users => {
-      response.send(JSON.stringify(users, null, 2));
+      response.send(users);
     })
     .catch(error => {
       response.status(500).send('Users could not be found');
+    });
+});
+
+// create user
+server.post('/api/users', (request, response) => {
+  const { name, bio } = request.body;
+  if (!name || !bio) {
+    response.status(400).send({
+      errorMessage: 'Please provide name and bio for the user.',
+    });
+  }
+  db.insert({ name, bio })
+    .then(user => {
+      response.send(user);
+    })
+    .catch(error => {
+      response.status(500).send('User could not be created');
     });
 });
 
