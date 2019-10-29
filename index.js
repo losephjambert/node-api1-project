@@ -48,6 +48,24 @@ server.get('/api/users/:id', (request, response) => {
     });
 });
 
+// delete user by :id
+server.delete('/api/users/:id', (request, response) => {
+  const { id } = request.params;
+  db.remove(id)
+    .then(user => {
+      user === 0 && response.sendStatus(404);
+      user !== 0 && response.sendStatus(200);
+    })
+    .catch(error => {
+      console.log('delete error', error);
+      //   response
+      //     .status(500)
+      //     .send({ error: `The user with ID: ${id} could not be removed` });
+      // });
+      response.sendStatus(500);
+    });
+});
+
 // create user
 server.post('/api/users', (request, response) => {
   const { name, bio } = request.body;
