@@ -23,21 +23,28 @@ server.get('/api/users', (request, response) => {
       response.send(users);
     })
     .catch(error => {
-      response.status(500).send('Users could not be found');
+      response
+        .status(500)
+        .send({ error: 'The users information could not be retrieved.' });
     });
 });
 
 // get user by :id
 server.get('/api/users/:id', (request, response) => {
   const { id } = request.params;
-  console.log(id);
   db.findById(id)
     .then(user => {
-      response.send(user);
+      user && response.send(user);
+      !user &&
+        response.status(404).send({
+          message: `The user with the specified ID: ${id} does not exist.`,
+        });
       console.log(user);
     })
     .catch(error => {
-      response.status(500).send('Users could not be found');
+      response
+        .status(500)
+        .send({ error: 'The user information could not be retrieved.' });
     });
 });
 
